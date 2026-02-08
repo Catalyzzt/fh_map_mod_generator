@@ -19,7 +19,7 @@ pip install numpy pillow
 
 ### BC7 Encoder
 
-Included `bc7_encoder.cp313-win_amd64.pyd` binary will work if you use Python 3.13 on Windows Machine, otherwise you'll need to build encoder yourself.
+Included `bc7_encoder.cp31*-win_amd64.pyd` binaries will work if you use Python 3.13 or 3.14 on a Windows Machine, otherwise you'll need to build encoder yourself.
 BC7 encoder is a compiled C++ extension that provides texture compression into expected pixel format.
 
 - General build requirements:

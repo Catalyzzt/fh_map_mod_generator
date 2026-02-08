@@ -80,7 +80,7 @@ for name in _HEADER_NAMES:
         HEADERS[name] = data
         _HEADERS_LOWER[name.lower()] = (name, data)
 
-BG_PATH = r"War-WindowsNoEditor_MapMod\War\Content\Textures\UI\WorldMap\WorldMapBG.uasset"
+BG_PATH = r"War\Content\Textures\UI\WorldMap\WorldMapBG.uasset"
 
 def _get_header(name):
     canonical, header = _HEADERS_LOWER.get(name.lower(), (None, None))
@@ -92,7 +92,7 @@ def _gen_uasset(name, texture):
     canonical, header = _get_header(name)
     footer = (b'\x00\x08\x00\x00\xf0\x06\x00\x00\x01\x00\x00\x00\x00\x00'
               b'\x00\x00\x0f\x00\x00\x00\x00\x00\x00\x00\xc1\x83\x2a\x9e')
-    path = r"War-WindowsNoEditor_MapMod\War\Content\Textures\UI\HexMaps\Processed\{}.uasset"
+    path = r"War\Content\Textures\UI\HexMaps\Processed\{}.uasset"
     return path.format(canonical), header + texture + footer
 
 def _pack_path(path):
