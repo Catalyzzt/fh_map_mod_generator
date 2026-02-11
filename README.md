@@ -31,63 +31,122 @@ BC7 encoder is a compiled C++ extension that provides texture compression into e
   - `g++` and `python3-dev` (`sudo apt-get install python3-dev build-essential`)
 
 Build with:
-`python build_encoder.py`
+```bash
+python build_encoder.py
+```
+
+## Layer Collection
+
+The `layer_collection` folder contains high-resolution stitched map layers that can be combined to create custom maps. Credit to [Wolfgang-IX/Foxhole-Map-Project](https://github.com/Wolfgang-IX/Foxhole-Map-Project) for making this collection possible, most layers are sourced from there.
+
+### Available Layers
+
+#### Base Layers
+- **raws.png** - Raw map data
+- **t_devrender.png** - Developer's map renders
+- **t_landscape.png** - Landscape ID layer
+- **t_heightmap.png** - Complete heightmap
+- **t_norm.png** - Normal map
+- **t_curvature.png** - Curvature map
+
+#### Enhancement Layers
+- **ao.png** - Ambient occlusion (blend mode: multiply)
+- **contours.png** - Contour lines (blend mode: multiply)
+- **curvature_peaks.png** - Convex points (blend mode: additive)
+- **curvature_dips.png** - Concave points (blend mode: difference)
+- **heightmap_highs.png** - Terrain above water level (blend mode: additive)
+- **heightmap_lows.png** - Terrain below water level (blend mode: difference)
+- **rocks.png** - Rocks and mountains tinted blurred mask (blend mode: multiply)
+
+#### Feature Layers
+- **bulwark.png** - Bulwark structures
+- **glaciers.png** - Glaciers
+- **grid.png** - Grid overlay
+- **rdz.png** - Rapid decay zone overaly
+- **roads.png** - Roads
+
+#### Structures Range Overlays
+- **ranges_ai.png** - AI structure ranges
+- **ranges_cg.png** - Coastal gun ranges
+- **ranges_intel.png** - Intel ranges
+- **ranges_mh.png** - Mortar house ranges
+
+Combine layers using your preferred image editing software
 
 ## Usage
 
 ### Basic Usage
 
-The tool provides three main functions for packaging textures:
+This module provides five main functions:
 
-#### 1. `pak_textures_bc7` - Package Pre-Compressed BC7 Textures
+#### 1. `pak` - Package a generic mod
 
-Use this when you already have BC7-compressed texture data (must be exactly 3,637,248 bytes per texture).
+Accepts a dictionary of file paths and their binary data:
+
+```python
+from paker import pak
+
+files = {
+    "War/Content/Textures/MyTexture.uasset": b"...",
+    "War/Content/Data/MyData.uasset": b"..."
+}
+
+pak("output", files, compress=True)
+```
+
+#### 2. `pak_textures_bc7` - Package Pre-Compressed BC7 Textures
+
+Use this when you already have BC7-compressed texture data (must be exactly 3,637,248 bytes per texture):
 
 ```python
 from paker import pak_textures_bc7, HEADERS
 
-# Load pre-compressed BC7 texture data
 with open("example/texture", "rb") as f:
     texture_data = f.read()
 
-# Create mappings for all maps
 mappings = {map_name: texture_data for map_name in HEADERS}
 
-# Package with compression
-pak_textures_bc7("output.pak", compress=True, mappings=mappings)
-
-# Or package without compression
-pak_textures_bc7("output.pak", compress=False, mappings=mappings)
+pak_textures_bc7("output", compress=True, mappings=mappings)
 ```
 
-#### 2. `pak_textures_nprgba` - Package numpy array RGBA Images
+#### 3. `pak_textures_nprgba` - Package numpy array RGBA Images
 
-Use this to compress numpy RGBA images to BC7 format and package them. **Requires the BC7 encoder to be built.**
+Compress numpy RGBA images to BC7 format and package them. **Requires the BC7 encoder to be built.**
 
 ```python
 from paker import pak_textures_nprgba, HEADERS
 import numpy as np
 from PIL import Image
 
-# Load image as numpy array
 image = np.array(Image.open("example/texture.png"))
 
-# Create mappings for all maps
 mappings = {map_name: image for map_name in HEADERS}
 
-# Package with compression
-pak_textures_nprgba("output.pak", compress=True, mappings=mappings)
+pak_textures_nprgba("output", compress=True, mappings=mappings)
 ```
 
-#### 3. `pak_textures_folder` - Package Entire Folder
+#### 4. `pak_textures_folder` - Package Entire Folder
 
-Use this to process all supported image files in a folder. **Requires the BC7 encoder to be built.**
+Process all supported image files in a folder. **Requires the BC7 encoder to be built.**
 
 ```python
 from paker import pak_textures_folder
 
-# Package all images in a folder
-pak_textures_folder("output.pak", compress=True, folder="path/to/textures")
+pak_textures_folder("output", compress=True, folder="path/to/textures")
+```
+
+#### 5. `pak_stitched` - Package Stitched Map Image
+
+Break a full stitched map image into individual regions and package. **Requires the BC7 encoder to be built.**
+
+The stitched image must be in the exact format of the provided layer collection images.
+
+This is particularly useful for creating mods from the provided layer collection:
+
+```python
+from paker import pak_stitched
+
+pak_stitched("my_custom_map", compress=True, stitched_image="my_custom_map.png")
 ```
 
 ## Project Structure
@@ -100,12 +159,21 @@ pak_textures_folder("output.pak", compress=True, folder="path/to/textures")
 ├── bc7_src/                 # BC7 encoder source files
 ├── assets/
 │   ├── WorldMapBG.uasset    # Upscaled background texture
+│   ├── mask.png             # Alpha mask for region extraction
 │   └── headers/             # Binary headers for each map region
 │       ├── MapAcrithiaHex
 │       ├── MapAllodsBightHex
 │       └── ... (All 55 map headers)
+├── layer_collection/        # Stitched map layers for compositing
+│   ├── ao.png
+│   ├── contours.png
+│   ├── t_norm.png
+│   └── ... (All layer files)
 └── example/
-    ├── usage_example.py     # Example usage script
     ├── texture              # Sample BC7 texture data
     └── texture.png          # Sample PNG texture
 ```
+
+## Credits
+
+- Layer collection is largerly composed and edited from [Wolfgang-IX/Foxhole-Map-Project](https://github.com/Wolfgang-IX/Foxhole-Map-Project)
