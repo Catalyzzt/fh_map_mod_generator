@@ -66,6 +66,7 @@ The `layer_collection` folder contains high-resolution stitched map layers that 
 - **roads.png** - Roads
 - **bridges.png** - Bridges
 - **beaches.png** - Beaches
+- **wells.png** - Water wells
 
 #### Structures Range Overlays
 - **ranges_ai.png** - AI structure ranges
