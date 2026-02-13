@@ -78,19 +78,6 @@ Combine layers using your preferred image editing software
 
 ## Usage
 
-### Path Configuration
-
-`paker.py` now reads its paths/constants from `paker_config.py`.
-Default behavior is unchanged, but you can override paths via environment variables:
-
-- `FH_PAKER_ASSETS_DIR`
-- `FH_PAKER_HEADERS_DIR`
-- `FH_PAKER_MASK_PATH`
-- `FH_PAKER_WORLDMAP_BG_UASSET_PATH`
-- `FH_PAKER_LAYER_COLLECTION_DIR`
-
-This allows moving `layer_collection` (or other assets) to arbitrary locations.
-
 ### Basic Usage
 
 This module provides five main functions:
@@ -170,7 +157,6 @@ pak_stitched("my_custom_map", compress=True, stitched_image="my_custom_map.png")
 ```
 .
 ├── paker.py                 # Main module with packaging functions
-├── paker_config.py          # Path + constant configuration for paker.py
 ├── build_encoder.py         # Script to build the BC7 encoder extension
 ├── bc7_encoder*.pyd/.so     # Compiled BC7 encoder
 ├── bc7_src/                 # BC7 encoder source files
