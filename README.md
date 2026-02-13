@@ -64,6 +64,8 @@ The `layer_collection` folder contains high-resolution stitched map layers that 
 - **grid.png** - Grid overlay
 - **rdz.png** - Rapid decay zone overaly
 - **roads.png** - Roads
+- **bridges.png** - Bridges
+- **beaches.png** - Beaches
 
 #### Structures Range Overlays
 - **ranges_ai.png** - AI structure ranges
